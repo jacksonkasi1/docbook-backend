@@ -76,9 +76,13 @@ function sendNotificationToUser(token, message) {
 
 // Example: Run the process
 const runProcess = async () => {
-  const reminders = await fetchDataFromFirestore();
-  const fcmData = await fetchDataFromFcmToken();
-  setupReminders(reminders, fcmData);
+    try{
+        const reminders = await fetchDataFromFirestore()
+        const fcmData = await fetchDataFromFcmToken();
+        setupReminders(reminders, fcmData);
+    }catch(err){
+        console.log("error", err)
+    }
 };
 
 app.get('/refresh', (req,res)=>{
