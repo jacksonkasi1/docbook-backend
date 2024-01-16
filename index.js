@@ -81,8 +81,14 @@ const runProcess = async () => {
   setupReminders(reminders, fcmData);
 };
 
-app.get('/refresh', ()=>{
-    runProcess()
+app.get('/refresh', (req,res)=>{
+    runProcess().then(()=>{
+        console.log("Success")
+        res.send({
+            success: true,
+            message: "Success"
+        })
+    })
 })
 
 app.get("/", (req, res) => {
