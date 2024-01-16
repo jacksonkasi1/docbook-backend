@@ -44,7 +44,8 @@ const setupReminders = (reminders, fcmData) => {
         // Schedule notification every day at 8 AM "44 11 * * *"date.format("m H D M d")
         sendNotificationToUser(
           tokens[0]?.token,
-          "Your scheduled notification message"
+          `Reminder set for ${reminder?.patientName}`,
+          reminder
         );
       });
     } else {
@@ -53,11 +54,11 @@ const setupReminders = (reminders, fcmData) => {
   });
 };
 
-function sendNotificationToUser(token, message) {
+function sendNotificationToUser(token, message, reminder) {
   // Retrieve the user's FCM token from the database
   const payload = {
     notification: {
-      title: "Your Notification Title",
+      title: "Reminder",
       body: message,
     },
     token: token,
@@ -68,6 +69,19 @@ function sendNotificationToUser(token, message) {
     .send(payload)
     .then((response) => {
       console.log("Notification sent successfully:", response);
+      admin.firestore().collection("Notifications").add({
+        token: token,
+        message: message,
+        date: new Date(),
+        patientName: reminder.patientName,
+        hospitalName: reminder?.hospitalName,
+        uid: reminder.uid,
+        patientId: reminder.patientId,
+        date: reminder.date,
+        time: reminder.time,
+      }).then((res)=>{
+        console.log("ressssss", res)
+      })
     })
     .catch((error) => {
       console.error("Error sending notification:", error);
