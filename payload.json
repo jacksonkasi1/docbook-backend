@@ -1,0 +1,11 @@
+{
+  "patientName": "Jackson Kasi",
+  "hospitalName": "City Hospital",
+  "patientId": "12345",
+  "type": "Daily",
+  "date": "2024-01-17",
+  "time": "08:00",
+  "repeatFrequency": "Every Day",
+  "repeatDays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+  "uid": "user_67890"
+}
