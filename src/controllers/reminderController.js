@@ -1,4 +1,8 @@
+const logger = require("../utils/logger");
+
 const reminderService = require("../services/reminderService");
+const qstashService = require("../services/qstashService");
+
 
 exports.refreshReminders = async (req, res) => {
   try {
@@ -23,9 +27,18 @@ exports.addReminder = async (req, res) => {
     //   repeatFrequency: "Every Day",
     //   repeatDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
     //   uid: "user_67890",
+    //   reminderId: "12345",
     // };
 
     const reminderId = await reminderService.addReminder(req.body);
+
+    const cornResult = await qstashService.setCronTrigger({
+      ...req.body,
+      reminderId: reminderId,
+    });
+
+    logger.log({ cornResult });
+
     res
       .status(201)
       .json({ success: true, message: "Reminder added", id: reminderId });

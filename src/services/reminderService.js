@@ -13,12 +13,21 @@ const setupReminders = async () => {
     const reminders = await fetchDataFromCollection("Reminder");
     const fcmTokens = await fetchDataFromCollection("Fcm_Token");
 
+    console.log({fcmTokens});
+
     reminders.forEach((reminder) => {
-      // Assuming reminder.date and reminder.time are properly formatted
-      const schedule = `${reminder.time.minute} ${reminder.time.hour} ${reminder.date.day} ${reminder.date.month} *`;
-      logger.info(`Cron schedule: ${schedule}`); // Add this line to log the schedule string
+      // Parsing the time and date
+      const timeParts = reminder.time.split(":"); // Splits "HH:MM:SS"
+      const dateParts = reminder.date.split("-"); // Splits "YYYY-MM-DD"
+
+      // Assuming the cron job needs to be set daily at the specified time
+      const schedule = `${timeParts[1]} ${timeParts[0]} * * *`; // "minute hour * * *"
+
+      logger.info(`Cron schedule: ${schedule}`);
 
       const tokenInfo = fcmTokens.find((token) => token.uid === reminder.uid);
+
+      console.log({tokenInfo});
 
       if (tokenInfo) {
         cron.schedule(schedule, () => {
@@ -43,4 +52,9 @@ const setupReminders = async () => {
   }
 };
 
-module.exports = { setupReminders, addReminder, fetchReminders, updateReminder };
+module.exports = {
+  setupReminders,
+  addReminder,
+  fetchReminders,
+  updateReminder,
+};
