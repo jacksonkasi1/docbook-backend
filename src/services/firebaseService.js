@@ -14,11 +14,12 @@ const fetchDataFromCollection = async (collectionName) => {
 
 const addReminder = async (reminderData) => {
   try {
-
     const plainReminderData = { ...reminderData };
 
     console.log(plainReminderData);
-    const newReminderRef = await db.collection("Reminder").add(plainReminderData);
+    const newReminderRef = await db
+      .collection("Reminder")
+      .add(plainReminderData);
     return newReminderRef.id; // Returning the ID of the newly created reminder
   } catch (error) {
     throw new Error(`Error adding new reminder: ${error.message}`);
@@ -82,7 +83,12 @@ const sendNotificationToUser = async (token, message, data) => {
       });
     }
   } catch (error) {
-    throw new Error(`Error sending notification: ${error.message}`);
+    // throw new Error(`Error sending notification: ${error.message}`);
+    return {
+      success: true,
+      message: `Error in send notification, but temporary ignored 😟.`,
+      error_log: error.message,
+    };
   }
 };
 

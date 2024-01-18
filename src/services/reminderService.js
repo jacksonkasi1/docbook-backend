@@ -64,10 +64,13 @@ const sendReminder = async (data) => {
       logger.warn(`No FCM token found for user ID: ${data.uid}`);
       throw new Error(`FCM token not found for user ID: ${data.uid}`);
     }
+
     logger.info(JSON.stringify(tokenInfo));
+
     await sendNotificationToUser(
       tokenInfo.token,
       `Reminder for ${data.patientName}`,
+      data,
     );
     logger.log(`Notification sent to ${data.patientName}`);
   } catch (error) {

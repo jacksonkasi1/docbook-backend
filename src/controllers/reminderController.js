@@ -94,7 +94,7 @@ exports.sendReminders = async (req, res) => {
 
 exports.reminderTestTest = async (req, res) => {
   try {
-    const message = "This is a test reminder";
+    const message = "This is a test reminder 📚";
 
     const payloadData = {
       patientName: "Hospital",
