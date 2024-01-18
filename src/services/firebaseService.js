@@ -14,7 +14,11 @@ const fetchDataFromCollection = async (collectionName) => {
 
 const addReminder = async (reminderData) => {
   try {
-    const newReminderRef = await db.collection("Reminder").add(reminderData);
+
+    const plainReminderData = { ...reminderData };
+
+    console.log(plainReminderData);
+    const newReminderRef = await db.collection("Reminder").add(plainReminderData);
     return newReminderRef.id; // Returning the ID of the newly created reminder
   } catch (error) {
     throw new Error(`Error adding new reminder: ${error.message}`);

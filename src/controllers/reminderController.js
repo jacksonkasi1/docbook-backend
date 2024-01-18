@@ -18,26 +18,25 @@ exports.refreshReminders = async (req, res) => {
 exports.addReminder = async (req, res) => {
   try {
     // const body = {
-    //   patientName: "Jackson Kasi",
-    //   hospitalName: "City Hospital",
-    //   patientId: "12345",
-    //   type: "Daily",
-    //   date: "2024-01-17",
-    //   time: "08:00",
-    //   repeatFrequency: "Every Day",
-    //   repeatDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-    //   uid: "Ozwx7RXcTCLoz3W4kMAt"
+      // patientName: "Jackson Kasi",
+      // hospitalName: "City Hospital",
+      // patientId: "12345",
+      // type: "Daily",
+      // date: "2024-01-17",
+      // time: "08:00",
+      // repeatFrequency: "Every Day",
+      // repeatDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      // uid: "Ozwx7RXcTCLoz3W4kMAt"
     // };
 
     const reminderId = await reminderService.addReminder(req.body);
 
-    const cornResult = await qstashService.setCronTrigger({
+    const payload = {
       ...req.body,
       reminderId: reminderId,
-    });
+    }
 
-    logger.info(`Cron result: ${cornResult}`);
-
+     await qstashService.setCronTrigger(payload);
     res
       .status(201)
       .json({ success: true, message: "Reminder added", id: reminderId });
