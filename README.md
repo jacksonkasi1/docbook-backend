@@ -1,3 +1,3 @@
 # docbook-backend
 
-note: this repo firebase info will deleted soon
+note: this repo firebase & qstash data & key will deleted soon
