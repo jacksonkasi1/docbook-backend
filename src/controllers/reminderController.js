@@ -2,6 +2,7 @@ const logger = require("../utils/logger");
 
 const reminderService = require("../services/reminderService");
 const qstashService = require("../services/qstashService");
+const firebaseService = require("../services/firebaseService");
 
 exports.refreshReminders = async (req, res) => {
   try {
@@ -74,7 +75,27 @@ exports.deleteReminder = async (req, res) => {
 
 exports.sendReminders = async (req, res) => {
   try {
-    await reminderService.sendNotificationToUser(req.body);
+    await reminderService.sendReminder(req.body);
+    res.send({ success: true, message: "Reminders sent" });
+  } catch (error) {
+    res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+exports.reminderTestTest = async (req, res) => {
+  try {
+    const message = "This is a test reminder";
+
+    const payloadData = {
+      patientName: "Hospital",
+      hospitalName: "Hospital",
+      uid: "Ozwx7RXcTCLoz3W4kMAt",
+      patientId: "12345",
+      date: "2024-01-17",
+      time: "08:00",
+    };
+
+    await firebaseService.sendNotificationToUser(req.params.fcm_token, message, payloadData);
     res.send({ success: true, message: "Reminders sent" });
   } catch (error) {
     res.status(500).send({ success: false, message: error.message });

@@ -6,6 +6,7 @@ const {
   deleteReminder,
   fetchReminders,
   updateReminder,
+  getFcmTokenForUser,
 } = require("./firebaseService");
 const logger = require("../utils/logger");
 
@@ -54,28 +55,24 @@ const setupReminders = async () => {
 };
 
 const sendReminder = async (data) => {
-  logger.info(`sendReminder: ${JSON.stringify(data)}`);
+  logger.info(`Preparing to send reminder: ${JSON.stringify(data)}`);
 
-  const fcmTokens = await fetchDataFromCollection("Fcm_Token");
   try {
-    const tokenInfo = fcmTokens.find((token) => token.uid === data.uid);
+    const tokenInfo = await getFcmTokenForUser(data.uid);
 
-    if (tokenInfo) {
-      sendNotificationToUser(
-        tokenInfo.token,
-        `Reminder for ${data.patientName}`,
-      )
-        .then(() => logger.log(`Notification sent to ${data.patientName}`))
-        .catch((error) =>
-          logger.error(`Error sending notification: ${error.message}`),
-        );
-    } else {
-      logger.warn(`No token found for user ID: ${data.uid}`);
-      throw new Error(`No token found for user ID: ${data.uid}`);
+    if (!tokenInfo) {
+      logger.warn(`No FCM token found for user ID: ${data.uid}`);
+      throw new Error(`FCM token not found for user ID: ${data.uid}`);
     }
+
+    await sendNotificationToUser(
+      tokenInfo.token,
+      `Reminder for ${data.patientName}`,
+    );
+    logger.log(`Notification sent to ${data.patientName}`);
   } catch (error) {
-    logger.error(`Error sending notification: ${error.message}`);
-    throw error;
+    logger.error(`Error in sendReminder: ${error.message}`, error);
+    throw error; // Re-throw the error for further handling if necessary
   }
 };
 
@@ -86,4 +83,5 @@ module.exports = {
   updateReminder,
   deleteReminder,
   sendReminder,
+  sendNotificationToUser,
 };

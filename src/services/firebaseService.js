@@ -46,7 +46,12 @@ const deleteReminder = async (reminderId) => {
   }
 };
 
-const sendNotificationToUser = async (token, message) => {
+const getFcmTokenForUser = async (uid) => {
+  const fcmTokens = await fetchDataFromCollection("Fcm_Token");
+  return fcmTokens.find((token) => token.uid === uid);
+};
+
+const sendNotificationToUser = async (token, message, data) => {
   const payload = {
     notification: {
       title: "Reminder",
@@ -57,6 +62,21 @@ const sendNotificationToUser = async (token, message) => {
 
   try {
     await admin.messaging().send(payload);
+
+    if (data) {
+      // Add Notification History
+      db.collection("Notifications").add({
+        token: token,
+        message: message,
+        date: new Date(),
+        patientName: data.patientName,
+        hospitalName: data?.hospitalName,
+        uid: data.uid,
+        patientId: data.patientId,
+        date: data.date,
+        time: data.time,
+      });
+    }
   } catch (error) {
     throw new Error(`Error sending notification: ${error.message}`);
   }
@@ -68,5 +88,6 @@ module.exports = {
   fetchReminders,
   updateReminder,
   deleteReminder,
+  getFcmTokenForUser,
   sendNotificationToUser,
 };
