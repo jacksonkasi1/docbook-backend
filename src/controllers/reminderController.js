@@ -85,8 +85,8 @@ exports.deleteReminder = async (req, res) => {
 
 exports.sendReminders = async (req, res) => {
   try {
-    await reminderService.sendReminder(req.body);
-    res.send({ success: true, message: "Reminders sent" });
+    const result = await reminderService.sendReminder(req.body);
+    res.send(result);
   } catch (error) {
     res.status(500).send({ success: false, message: error.message });
   }
@@ -105,8 +105,8 @@ exports.reminderTestTest = async (req, res) => {
       time: "08:00",
     };
 
-    await firebaseService.sendNotificationToUser(req.params.fcm_token, message, payloadData);
-    res.send({ success: true, message: "Reminders sent" });
+    const result = await firebaseService.sendNotificationToUser(req.params.fcm_token, message, payloadData);
+    res.send(result);
   } catch (error) {
     res.status(500).send({ success: false, message: error.message });
   }

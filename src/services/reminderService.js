@@ -67,12 +67,13 @@ const sendReminder = async (data) => {
 
     logger.info(JSON.stringify(tokenInfo));
 
-    await sendNotificationToUser(
+    const result =  await sendNotificationToUser(
       tokenInfo.token,
       `Reminder for ${data.patientName}`,
       data,
     );
     logger.log(`Notification sent to ${data.patientName}`);
+    return result;
   } catch (error) {
     // Ensure the second argument is an object for error logging
     logger.error(`Error in sendReminder`, { message: error.message });
