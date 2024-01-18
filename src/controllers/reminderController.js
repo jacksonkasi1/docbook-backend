@@ -57,6 +57,17 @@ exports.getReminders = async (req, res) => {
 exports.updateReminder = async (req, res) => {
   try {
     await reminderService.updateReminder(req.params.id, req.body);
+
+    const payload = {
+      ...req.body,
+      reminderId: req.params.id,
+    }
+
+     await qstashService.setCronTrigger(payload);
+    res
+      .status(201)
+      .json({ success: true, message: "Reminder added", id: reminderId });
+
     res.send({ success: true, message: "Reminder updated" });
   } catch (error) {
     res.status(500).send({ success: false, message: error.message });
