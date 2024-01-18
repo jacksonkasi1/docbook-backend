@@ -1,5 +1,6 @@
 const axios = require("axios");
 const moment = require("moment");
+const logger = require("../utils/logger");
 
 const dayOfWeekMap = {
   Sunday: "0",
@@ -48,6 +49,8 @@ const setCronTrigger = async (body) => {
     body.time,
     body.repeatDays,
   );
+
+  logger.info(`Cron expression: ${cronExpression}`);
 
   try {
     const response = await axios.post(url, body, {
