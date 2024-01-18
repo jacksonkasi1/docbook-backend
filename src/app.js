@@ -5,6 +5,6 @@ const apiLogger = require("./middleware/apiLogger");
 const app = express();
 
 app.use(apiLogger); // Log every API call
-app.use(routes);
+app.use('/api', routes);
 
 module.exports = app;

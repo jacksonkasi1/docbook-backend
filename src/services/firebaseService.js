@@ -38,6 +38,14 @@ const updateReminder = async (reminderId, reminderData) => {
   }
 };
 
+const deleteReminder = async (reminderId) => {
+  try {
+    await db.collection("Reminder").doc(reminderId).delete();
+  } catch (error) {
+    throw new Error(`Error deleting reminder: ${error.message}`);
+  }
+};
+
 const sendNotificationToUser = async (token, message) => {
   const payload = {
     notification: {
@@ -59,5 +67,6 @@ module.exports = {
   addReminder,
   fetchReminders,
   updateReminder,
+  deleteReminder,
   sendNotificationToUser,
 };

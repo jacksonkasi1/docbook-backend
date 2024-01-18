@@ -3,6 +3,7 @@ const {
   fetchDataFromCollection,
   sendNotificationToUser,
   addReminder,
+  deleteReminder,
   fetchReminders,
   updateReminder,
 } = require("./firebaseService");
@@ -13,7 +14,7 @@ const setupReminders = async () => {
     const reminders = await fetchDataFromCollection("Reminder");
     const fcmTokens = await fetchDataFromCollection("Fcm_Token");
 
-    console.log({fcmTokens});
+    console.log({ fcmTokens });
 
     reminders.forEach((reminder) => {
       // Parsing the time and date
@@ -27,7 +28,7 @@ const setupReminders = async () => {
 
       const tokenInfo = fcmTokens.find((token) => token.uid === reminder.uid);
 
-      console.log({tokenInfo});
+      console.log({ tokenInfo });
 
       if (tokenInfo) {
         cron.schedule(schedule, () => {
@@ -52,9 +53,37 @@ const setupReminders = async () => {
   }
 };
 
+const sendReminder = async (data) => {
+  logger.info(`sendReminder: ${JSON.stringify(data)}`);
+
+  const fcmTokens = await fetchDataFromCollection("Fcm_Token");
+  try {
+    const tokenInfo = fcmTokens.find((token) => token.uid === data.uid);
+
+    if (tokenInfo) {
+      sendNotificationToUser(
+        tokenInfo.token,
+        `Reminder for ${data.patientName}`,
+      )
+        .then(() => logger.log(`Notification sent to ${data.patientName}`))
+        .catch((error) =>
+          logger.error(`Error sending notification: ${error.message}`),
+        );
+    } else {
+      logger.warn(`No token found for user ID: ${data.uid}`);
+      throw new Error(`No token found for user ID: ${data.uid}`);
+    }
+  } catch (error) {
+    logger.error(`Error sending notification: ${error.message}`);
+    throw error;
+  }
+};
+
 module.exports = {
   setupReminders,
   addReminder,
   fetchReminders,
   updateReminder,
+  deleteReminder,
+  sendReminder,
 };

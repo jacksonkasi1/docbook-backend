@@ -3,7 +3,6 @@ const logger = require("../utils/logger");
 const reminderService = require("../services/reminderService");
 const qstashService = require("../services/qstashService");
 
-
 exports.refreshReminders = async (req, res) => {
   try {
     await reminderService.setupReminders();
@@ -26,8 +25,7 @@ exports.addReminder = async (req, res) => {
     //   time: "08:00",
     //   repeatFrequency: "Every Day",
     //   repeatDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-    //   uid: "user_67890",
-    //   reminderId: "12345",
+    //   uid: "Ozwx7RXcTCLoz3W4kMAt"
     // };
 
     const reminderId = await reminderService.addReminder(req.body);
@@ -37,7 +35,7 @@ exports.addReminder = async (req, res) => {
       reminderId: reminderId,
     });
 
-    logger.log({ cornResult });
+    logger.info(`Cron result: ${cornResult}`);
 
     res
       .status(201)
@@ -60,6 +58,24 @@ exports.updateReminder = async (req, res) => {
   try {
     await reminderService.updateReminder(req.params.id, req.body);
     res.send({ success: true, message: "Reminder updated" });
+  } catch (error) {
+    res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+exports.deleteReminder = async (req, res) => {
+  try {
+    await reminderService.deleteReminder(req.params.id);
+    res.send({ success: true, message: "Reminder deleted" });
+  } catch (error) {
+    res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+exports.sendReminders = async (req, res) => {
+  try {
+    await reminderService.sendNotificationToUser(req.body);
+    res.send({ success: true, message: "Reminders sent" });
   } catch (error) {
     res.status(500).send({ success: false, message: error.message });
   }
