@@ -3,6 +3,7 @@ const reminderController = require('../controllers/reminderController');
 const router = express.Router();
 
 router.get('/', (req, res) => res.send('Hello World!'));
+router.post('/', (req, res) => res.send('Hello World!'));
 
 router.get('/reminder-refresh', reminderController.refreshReminders);
 
