@@ -35,12 +35,11 @@ const generateCronExpression = (type, date, time, repeatDays) => {
 };
 
 // const url =
-//   "https://qstash.upstash.io/v2/schedules/https://docbook-be.onrender.com/api/reminders-send";
+//   `${process.env.QSTASH_URL}/${process.env.SEND_NOTIFICATION_API}`;
 
-const url = "https://qstash.upstash.io/v2/publish/notfication";
+const url = `${process.env.QSTASH_URL}/${process.env.QSTASH_WEBHOOK_TOPIC}`;
 
-const token =
-  "eyJVc2VySUQiOiI5NGIyMTA2Mi0wZDU3LTQxYzQtOWEzMC00YTIyMTU5NTJkNGMiLCJQYXNzd29yZCI6Ijc5ODc4NTUzOThmMzRjMzk5NDI4YWYwMjk0MzhmNGFkIn0=";
+const token = process.env.QSTASH_TOKEN;
 
 const setCronTrigger = async (body) => {
   const cronExpression = generateCronExpression(

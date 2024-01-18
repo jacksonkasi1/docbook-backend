@@ -55,7 +55,7 @@ const setupReminders = async () => {
 };
 
 const sendReminder = async (data) => {
-  logger.info(`Preparing to send reminder: ${JSON.stringify(data)}`);
+  logger.info(`Preparing to send reminder: ${data.patientName}`);
 
   try {
     const tokenInfo = await getFcmTokenForUser(data.uid);
@@ -64,14 +64,15 @@ const sendReminder = async (data) => {
       logger.warn(`No FCM token found for user ID: ${data.uid}`);
       throw new Error(`FCM token not found for user ID: ${data.uid}`);
     }
-
+    logger.info(JSON.stringify(tokenInfo));
     await sendNotificationToUser(
       tokenInfo.token,
       `Reminder for ${data.patientName}`,
     );
     logger.log(`Notification sent to ${data.patientName}`);
   } catch (error) {
-    logger.error(`Error in sendReminder: ${error.message}`, error);
+    // Ensure the second argument is an object for error logging
+    logger.error(`Error in sendReminder`, { message: error.message });
     throw error; // Re-throw the error for further handling if necessary
   }
 };
