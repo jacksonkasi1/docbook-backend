@@ -1,4 +1,4 @@
-# Qstash Headless Reminder
+# Qstash Headless Reminder (poc)
 
 No need to rely on Node.js, cron, or npm anymore; [Qstash](https://upstash.com) will handle the cron job. If it fails, it will retry itself, and we can also monitor cron jobs.
 
