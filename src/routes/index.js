@@ -23,7 +23,7 @@ router.post("/reminders-send", reminderController.sendReminders);
  */
 router.get('/notification-test/:fcm_token', reminderController.reminderTestTest);
 
-// fTrKT5J4QlKNW_BnSAo00E:APA91bF8I9kNuo5Xm6_2a72-62b-1j1K7OCa31cQkLwT8pSh8UnvT5bMuLx0rkxQnmRy2cJsr8RdtqObJoZxA-AXO2vR1JGqTJmQPd3OhDshncdFcQNlUK_QnuSPCzvZvjNNLESha0zv
+// fTrKT5J4QlKNW_BnSAo00E:APA91bF8I9kNuo5Xm6_2a72xxxxxxxxxxxxxxxxxxxxxzv
 
 
 module.exports = router;
